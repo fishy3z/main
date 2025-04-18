@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaosium - Constantiam's temporary replacement!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 0 0 10px #1976d2, 0 0 20px #1976d2, 0 0 30px #1976d2;
+            animation: pulse 2s infinite;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #bbb;
+            margin-bottom: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .cta-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 4rem 0;
+        }
+
+        .server-address {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            margin: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1e88e5, #1565c0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.6);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        .info-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .info-card {
+            flex: 1;
+            min-width: 300px;
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.2);
+        }
+
+        .info-card h2 {
+            color: #2196f3;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .rules-list {
+            padding-left: 1.5rem;
+        }
+
+        .rules-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .allowed {
+            color: #4caf50;
+        }
+
+        .not-allowed {
+            color: #f44336;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid #333;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(33, 150, 243, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 10px #2196f3, 0 0 20px #2196f3;
+            }
+            50% {
+                text-shadow: 0 0 15px #2196f3, 0 0 30px #2196f3, 0 0 40px #2196f3;
+            }
+            100% {
+                text-shadow: 0 0 10px #2196f3, 0 0 20px #2196f3;
+            }
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            .tagline {
+                font-size: 1.2rem;
+            }
+            .server-address {
+                font-size: 1.4rem;
+            }
+            .info-card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles-container" id="particles"></div>
+    
+    <header>
+        <div class="logo">CHAOSIUM</div>
+        <div class="tagline">Constantiam's temporary replacement!</div>
+    </header>
+
+    <div class="container">
+        <div class="cta-section">
+            <div class="server-address" id="server-ip">play.chaosium.xyz</div>
+            <div class="buttons">
+                <button class="btn btn-primary" id="copy-ip">Copy Server IP</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-card">
+                <h2>About Chaosium</h2>
+                <p>Welcome to Chaosium, the premier Minecraft anarchy server where freedom is the only rule. Experience pure, unfiltered gameplay in a world shaped by players, not admins. Alliances will form, empires will rise and fall, and legends will be made.</p>
+                <p>Join us now to leave your mark on the ultimate Minecraft anarchy experience.</p>
+            </div>
+
+            <div class="info-card">
+                <h2>Server Rules</h2>
+                <ul class="rules-list">
+                    <li class="allowed">✓ Hacked clients are allowed (Meteor, RusherHack, Future, etc.)</li>
+                    <li class="allowed">✓ PvP and raiding are encouraged</li>
+                    <li class="allowed">✓ Build whatever you want, wherever you want</li>
+                    <li class="not-allowed">✗ Lag machines are strictly prohibited</li>
+                    <li class="not-allowed">✗ DDoS attacks will result in permanent ban</li>
+                    <li class="not-allowed">✗ Exploits that crash the server</li>
+                </ul>
+                <p>Violation of prohibited rules will result in a website ban and possible in-game mute.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Chaosium | play.chaosium.xyz</p>
+    </footer>
+
+    <div class="toast" id="toast">IP copied to clipboard!</div>
+
+    <script>
+        // Particles background effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particlesCount = 50;
+            
+            for (let i = 0; i < particlesCount; i++) {
+                const particle = document.createElement('div');
+                
+                // Random particle properties
+                const size = Math.random() * 3 + 1;
+                const xPos = Math.random() * 100;
+                const yPos = Math.random() * 100;
+                const animationDuration = (Math.random() * 20 + 10).toFixed(2);
+                const opacity = Math.random() * 0.5 + 0.1;
+                
+                // Mix of blue colors with occasional subtle purple
+                let color;
+                const colorRand = Math.random();
+                
+                if (colorRand < 0.7) {
+                    // Blue shades (70% chance)
+                    const blueShade = Math.floor(Math.random() * 100) + 150;
+                    color = `rgb(30, ${Math.floor(blueShade/2)}, ${blueShade})`;
+                } else if (colorRand < 0.9) {
+                    // Cyan/teal shades (20% chance)
+                    const blueShade = Math.floor(Math.random() * 80) + 170;
+                    color = `rgb(30, ${blueShade}, ${blueShade})`;
+                } else {
+                    // Subtle purple (10% chance)
+                    const purpleShade = Math.floor(Math.random() * 80) + 120;
+                    color = `rgb(${purpleShade}, 30, ${purpleShade + 50})`;
+                }
+                
+                // Set particle style
+                particle.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background-color: ${color};
+                    left: ${xPos}%;
+                    top: ${yPos}%;
+                    border-radius: 50%;
+                    opacity: ${opacity};
+                    box-shadow: 0 0 ${size * 2}px ${color.replace('rgb', 'rgba').replace(')', ', 0.8)')};
+                    animation: float ${animationDuration}s infinite ease-in-out;
+                    animation-delay: ${Math.random() * 5}s;
+                `;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Add animation keyframes
+            const styleSheet = document.createElement('style');
+            styleSheet.innerHTML = `
+                @keyframes float {
+                    0% {
+                        transform: translateY(0) translateX(0);
+                    }
+                    25% {
+                        transform: translateY(-15px) translateX(10px);
+                    }
+                    50% {
+                        transform: translateY(0) translateX(20px);
+                    }
+                    75% {
+                        transform: translateY(15px) translateX(10px);
+                    }
+                    100% {
+                        transform: translateY(0) translateX(0);
+                    }
+                }
+            `;
+            document.head.appendChild(styleSheet);
+        });
+
+        // Button ripple effect
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const x = e.clientX - e.target.offsetLeft;
+                const y = e.clientY - e.target.offsetTop;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Copy IP button functionality
+        document.getElementById('copy-ip').addEventListener('click', function() {
+            const serverIp = document.getElementById('server-ip').textContent;
+            navigator.clipboard.writeText(serverIp).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            });
+        });
+
+        // Interactive hover effects for cards
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const angleX = (y - centerY) / 20;
+                const angleY = -(x - centerX) / 20;
+                
+                this.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateY(-5px)`;
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
